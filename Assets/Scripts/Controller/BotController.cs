@@ -6,7 +6,7 @@ using Model;
 using Model.Config;
 using UnityEngine;
 using Utilities;
-//Зачем это все?
+//The previous comment was unnecessary
 namespace Controller
 {
     public class BotController
