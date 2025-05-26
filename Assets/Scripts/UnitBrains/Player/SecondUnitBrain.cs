@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Model.Runtime.Projectiles;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace UnitBrains.Player
 {
@@ -60,11 +61,11 @@ namespace UnitBrains.Player
             ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
 
-            while (result.Count > 1)
-            {
-                result.RemoveAt(result.Count - 1);
-            }
-            return result;
+            //while (result.Count > 1)
+            //{
+            //    result.RemoveAt(result.Count - 1);
+            //}
+            //return result;
 
             float minDist = float.MaxValue;
             Vector2Int criticalTarget = Vector2Int.zero;
@@ -74,11 +75,11 @@ namespace UnitBrains.Player
                 if (minDist > DistanceToOwnBase(target))
                 {
                     criticalTarget = target;
-                    result.Clear();
-                    result.Add(target);
                 }
-                    return result;
             }
+            result.Clear();
+            result.Add(criticalTarget);
+            return result;
             ///////////////////////////////////////
         }
 
