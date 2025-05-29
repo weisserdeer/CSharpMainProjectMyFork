@@ -75,10 +75,12 @@ namespace UnitBrains.Player
                 if (minDist > DistanceToOwnBase(target))
                 {
                     criticalTarget = target;
+                    minDist = DistanceToOwnBase(target);
                 }
             }
             result.Clear();
-            result.Add(criticalTarget);
+            if (minDist != float.MaxValue)
+                result.Add(criticalTarget);
             return result;
             ///////////////////////////////////////
         }
