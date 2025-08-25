@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Model;
 using Model.Runtime.Projectiles;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
@@ -58,39 +56,17 @@ namespace UnitBrains.Player
 
         protected override List<Vector2Int> SelectTargets()
         {
-            List<Vector2Int> targetsInRange = new List<Vector2Int>(); //цели в зоне досягаемости 
-            List<Vector2Int> targetsOutOfRange = new List<Vector2Int>(); //цели out of reach
-
-            List<Vector2Int> allTargets = GetAllTargets().ToList(); //все цели
-            allTargets.OrderBy(DistanceToOwnBase); //сортируем все цели по близости к нашей базе
-
-            var enemyBase = runtimeModel.RoMap.Bases[IsPlayerUnitBrain ? RuntimeModel.BotPlayerId : RuntimeModel.PlayerId]; //база врага
-
-            targetsInRange.Clear();
-            targetsOutOfRange.Clear();
-
-            if (allTargets.Any())
-            {
-                foreach (Vector2Int target in allTargets)
-                {
-                    if (IsTargetInRange(target))
-                    {
-                        targetsInRange.Add(target);
-                    }
-                    else
-                    {
-                        targetsOutOfRange.Add(target);
-                    }
-                }
-            }
-            else
-            {
-                allTargets.Add(enemyBase);
-            }
-
-
+            ///////////////////////////////////////
+            // Homework 1.4 (1st block, 4rd module)
+            ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
-            
+
+            //while (result.Count > 1)
+            //{
+            //    result.RemoveAt(result.Count - 1);
+            //}
+            //return result;
+
             float minDist = float.MaxValue;
             Vector2Int criticalTarget = Vector2Int.zero;
 
@@ -106,6 +82,7 @@ namespace UnitBrains.Player
             if (minDist != float.MaxValue)
                 result.Add(criticalTarget);
             return result;
+            ///////////////////////////////////////
         }
 
         public override void Update(float deltaTime, float time)
