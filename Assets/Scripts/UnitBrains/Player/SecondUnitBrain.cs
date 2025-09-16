@@ -4,6 +4,7 @@ using System.Net;
 using Model;
 using Model.Runtime.Projectiles;
 using UnityEngine;
+using Utilities;
 using static UnityEngine.GraphicsBuffer;
 
 namespace UnitBrains.Player
@@ -57,8 +58,6 @@ namespace UnitBrains.Player
 
         public override Vector2Int GetNextStep()
         {
-            //return base.GetNextStep();
-
             var unitPos = unit.Pos;
 
             if (targetsInRange.Count > 0) //если в зоне досягаемости есть цели
@@ -69,19 +68,20 @@ namespace UnitBrains.Player
             else if (targetsOutOfRange.Count > 0)
             {
                 Vector2Int targetPos = targetsOutOfRange[0];
-                unitPos = CalcNextStepTowards(unitPos, targetPos);
+                var newUnitPos = unitPos.CalcNextStepTowards(targetPos);
+                return newUnitPos;
             }
             
-            return unit.Pos; //во всех остальных случаях (нет целей) возвращаем позицию юнита
+            return unitPos; //во всех остальных случаях (нет целей) возвращаем позицию юнита
         }
 
         protected override List<Vector2Int> SelectTargets()
         {
            
             List<Vector2Int> allTargets = GetAllTargets().ToList(); //все цели
-            
+           
             var enemyBase = runtimeModel.RoMap.Bases[IsPlayerUnitBrain ? RuntimeModel.BotPlayerId : RuntimeModel.PlayerId]; //база врага
-            
+
             targetsInRange.Clear();
             targetsOutOfRange.Clear();
 
@@ -101,11 +101,12 @@ namespace UnitBrains.Player
             }
             else
             {
-                allTargets.Add(enemyBase);
+                Debug.Log("Нет целей.");
             }
 
+            bool enemyBaseIsInRange = targetsInRange.Contains(enemyBase);
 
-            List<Vector2Int> result = allTargets;
+            List<Vector2Int> result = new List<Vector2Int>(targetsInRange);
             
             float minDist = float.MaxValue;
             Vector2Int criticalTarget = Vector2Int.zero;
@@ -118,9 +119,8 @@ namespace UnitBrains.Player
                     minDist = DistanceToOwnBase(target);
                 }
             }
-            result.Clear();
 
-            if (minDist != float.MaxValue)
+            if (enemyBaseIsInRange)
                 result.Add(enemyBase);
             return result;
         }
